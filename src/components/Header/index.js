@@ -1,22 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "./styles.css";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import { toast } from "react-toastify";
 import { reset } from "../../accountSlice";
 import { useDispatch } from "react-redux";
-
-// signOut(auth)
-//   .then(() => {
-//     // Sign-out successful.
-//   })
-//   .catch((error) => {
-//     // An error happened.
-//   });
+import { UserContext } from "../../context/userContext";
 const Header = () => {
+  const { setUserId } = useContext(UserContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, loading] = useAuthState(auth);
@@ -31,12 +25,13 @@ const Header = () => {
     } catch (error) {
       // An error happened.
       console.error(error.message);
-      throw new Error(error.message);
     }
   }
 
   useEffect(() => {
     if (user) {
+      // console.log("from header", user);
+      setUserId(user.uid);
       navigate("/dashboard");
     }
   }, [user, loading]);

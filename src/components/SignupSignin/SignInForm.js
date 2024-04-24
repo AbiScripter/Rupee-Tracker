@@ -4,15 +4,12 @@ import { useNavigate } from "react-router-dom";
 import signInUser from "../../utils/signInUtils";
 import googleSignIn from "../../utils/googleSignIn";
 import createDoc from "../../utils/createDocUtils";
-import { useDispatch } from "react-redux";
-import { updateUserId } from "../../accountSlice";
 import { UserContext } from "../../context/userContext";
 
 const SignInForm = ({ setIsSignInTab }) => {
   const [form] = Form.useForm();
-  const { setUsserId } = useContext(UserContext);
+  const { setUserId } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -22,8 +19,7 @@ const SignInForm = ({ setIsSignInTab }) => {
     //if signin fails it returns null
     if (userData !== null) {
       // console.log(userData);
-      // dispatch(updateUserId(userData.uid));
-      setUsserId(userData.uid);
+      setUserId(userData.uid);
       navigate("/dashboard");
     }
     // form.resetFields(); //reset the form

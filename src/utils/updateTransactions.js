@@ -14,6 +14,7 @@ const UpdateTrans = (usserId, transId) => {
         expenses: updatedState.expenses,
         totalIncome: updatedState.totalIncome,
         totalExpense: updatedState.totalExpense,
+        graphData: updatedState.graphData,
       };
       await updateDoc(docRef, transactionData);
     } catch (error) {

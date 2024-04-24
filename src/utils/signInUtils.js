@@ -24,7 +24,7 @@ async function signInUser(data, setIsLoading) {
   setIsLoading(true);
   try {
     const user = await signin(auth, data.email, data.password);
-    console.log(user);
+    // console.log(user);
 
     toast.success("Singed In Sucessfully");
     setIsLoading(false);

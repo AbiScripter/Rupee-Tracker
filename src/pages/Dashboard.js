@@ -9,17 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { initiateStateLogin } from "../accountSlice";
 import { UserContext } from "../context/userContext";
+import LineGraph from "../components/Charts/LineGraph";
 
 const Dashboard = () => {
+  const [user, loading] = useAuthState(auth);
+  const currAccount = useSelector((state) => state.account);
+  // console.log("from dashboard........", currAccount);
   const dispatch = useDispatch();
-  const { usserId, setUsserId, transId, setTransId } = useContext(UserContext);
-
-  // const userId = useSelector((state) => state.account.currUserId);
-
-  // const [transactions, setTransactions] = useState([]);
-  const reduxAccount = useSelector((state) => state.account);
+  const { userId, setTransactionId } = useContext(UserContext);
   const [prevUserId, setPrevUserId] = useState(null); // Initialize a state to store the previous userId
-  // const [transactionId, setTransactionId] = useState("");
 
   //!fetching user data
   const fetchTranscations = async (subCollectionRef) => {
@@ -29,78 +27,27 @@ const Dashboard = () => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(subCollectionData);
+      // console.log(subCollectionData);
       dispatch(initiateStateLogin(subCollectionData[0]));
-
-      // console.log(subCollectionData[0].id);
-      // setTransactionId(subCollectionData[0]?.id);
-      setTransId(subCollectionData[0]?.id);
-
-      // setTransactions(subCollectionData);
+      setTransactionId(subCollectionData[0]?.id);
     } catch (error) {
       console.error(error);
+    } finally {
     }
   };
 
   //!only fetch data at initial render
   useEffect(() => {
     const id = setTimeout(() => {
-      const subCollectionRef = collection(db, `users/${usserId}/transactions`);
-      if (usserId && usserId !== prevUserId) {
+      const subCollectionRef = collection(db, `users/${userId}/transactions`);
+      if (userId && userId !== prevUserId) {
         fetchTranscations(subCollectionRef);
-        setPrevUserId(usserId); // Update the previous userId
+        setPrevUserId(userId); // Update the previous userId
       }
-    }, 2000);
+    }, 1000);
+
     return () => clearTimeout(id);
-  }, [usserId, prevUserId]);
-
-  //!update every transcations to firestore database
-  // const updateTransactions = async (
-  //   parentCollection,
-  //   parentId,
-  //   subcollectionName,
-  //   documentId,
-  //   newData
-  // ) => {
-  //   console.log("transactionId", documentId);
-  //   try {
-  //     const docRef = doc(
-  //       db,
-  //       `${parentCollection}/${parentId}/${subcollectionName}`,
-  //       documentId
-  //     );
-  //     await updateDoc(docRef, {
-  //       currBalance: newData.currBalance,
-  //       expenses: newData.expenses,
-  //       incomes: newData.incomes,
-  //       totalExpense: newData.totalExpense,
-  //       totalIncome: newData.totalIncome,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error updating transactions:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const id = setTimeout(() => {
-  //     if (usserId) {
-  //       const parentCollection = "users";
-  //       const parentId = usserId;
-  //       const subcollectionName = "transactions";
-  //       const documentId = transId;
-  //       const newData = reduxAccount;
-
-  //       updateTransactions(
-  //         parentCollection,
-  //         parentId,
-  //         subcollectionName,
-  //         documentId,
-  //         newData
-  //       );
-  //     }
-  //   }, 2000);
-  //   return () => clearTimeout(id);
-  // }, [usserId, reduxAccount, transId]);
+  }, [userId, prevUserId]);
 
   // ! /////////////////////////////
   // const getUserInfo = async () => {
@@ -119,15 +66,23 @@ const Dashboard = () => {
 
   // ! /////////////////////////////
 
-  // console.log(transactions);
-  // console.log(reduxAccount);
   return (
     <div>
-      <Header />
-      <h1>{usserId}</h1>
-      <Income />
-      <Expense />
-      <DataTable />
+      {loading ? (
+        <p>loading...</p>
+      ) : (
+        <div>
+          <Header />
+
+          <h1>{userId}</h1>
+          <h3>Current Balance: {currAccount.currBalance}</h3>
+          <Income />
+          <Expense />
+          <DataTable />
+        </div>
+      )}
+
+      <LineGraph />
     </div>
   );
 };

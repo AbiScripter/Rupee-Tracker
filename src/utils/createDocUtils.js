@@ -3,7 +3,7 @@ import { db, doc, setDoc } from "../firebase";
 import { toast } from "react-toastify";
 
 async function createDoc(user, username, account) {
-  console.log("from redux", account);
+  // console.log("from redux", account);
   //getting userdata
   const userRef = doc(db, "users", user.uid);
   const userData = await getDoc(userRef);

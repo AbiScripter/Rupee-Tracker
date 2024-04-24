@@ -4,14 +4,12 @@ import { Button, Form, Input } from "antd";
 import signUpUser from "../../utils/signUpUtils";
 import createDoc from "../../utils/createDocUtils";
 import googleSignIn from "../../utils/googleSignIn";
-import { useDispatch, useSelector } from "react-redux";
-import { updateUserId } from "../../accountSlice";
+import { useSelector } from "react-redux";
 import { UserContext } from "../../context/userContext";
 
 const SignUpForm = ({ setIsSignInTab }) => {
-  const { setUsserId } = useContext(UserContext);
+  const { setUserId } = useContext(UserContext);
   const account = useSelector((state) => state.account);
-  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +24,7 @@ const SignUpForm = ({ setIsSignInTab }) => {
       console.log(userData);
       createDoc(userData, data.username, account);
       // dispatch(updateUserId(userData.uid));
-      setUsserId(userData.uid);
+      setUserId(userData.uid);
 
       // Navigate to the dashboard page
       navigate("/dashboard");

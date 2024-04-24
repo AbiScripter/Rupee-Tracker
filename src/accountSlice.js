@@ -7,6 +7,7 @@ const initialState = {
   expenses: [],
   totalIncome: 0,
   totalExpense: 0,
+  graphData: [],
 };
 
 const calcTotalIncome = (incomes) => {
@@ -31,6 +32,10 @@ const accountSlice = createSlice({
       state.totalExpense = calcTotalExpense(state.expenses);
       state.currBalance = state.totalIncome - state.totalExpense;
     },
+    addGraph(state, action) {
+      state.graphData.push(action.payload);
+      // console.log(action.payload);
+    },
 
     initiateStateLogin: (state, action) => {
       if (action.payload !== undefined) {
@@ -43,22 +48,31 @@ const accountSlice = createSlice({
   },
 });
 
-export const { addIncome, addExpense, initiateStateLogin, reset } =
+export const { addIncome, addExpense, initiateStateLogin, addGraph, reset } =
   accountSlice.actions;
 
 export const addIncomeAsync =
-  (incomeData, usserId, transId) => async (dispatch, getState) => {
+  (incomeData, userId, transactionId) => async (dispatch, getState) => {
     dispatch(addIncome(incomeData));
     const state = getState().account;
-    const { updateTransactions } = UpdateTrans(usserId, transId);
+    const { updateTransactions } = UpdateTrans(userId, transactionId);
     await updateTransactions(state);
   };
 
 export const addExpenseAsync =
-  (expenseData, usserId, transId) => async (dispatch, getState) => {
+  (expenseData, userId, transactionId) => async (dispatch, getState) => {
     dispatch(addExpense(expenseData));
     const state = getState().account;
-    const { updateTransactions } = UpdateTrans(usserId, transId);
+    const { updateTransactions } = UpdateTrans(userId, transactionId);
+    await updateTransactions(state);
+  };
+
+export const addGraphDataAsync =
+  (amount, createdAt, userId, transactionId) => async (dispatch, getState) => {
+    dispatch(addGraph({ amount: amount, createdAt: createdAt }));
+    //   addGraph({ amount: -data.amount, createdAt: String(data.created.$d) })
+    const state = getState().account;
+    const { updateTransactions } = UpdateTrans(userId, transactionId);
     await updateTransactions(state);
   };
 

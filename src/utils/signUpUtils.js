@@ -23,7 +23,7 @@ async function signUpUser(data, setIsLoading) {
   setIsLoading(true);
   try {
     const user = await signUp(auth, data.email, data.password);
-    console.log(user);
+    // console.log(user);
     toast.success("SignedUp successfully");
 
     setIsLoading(false);

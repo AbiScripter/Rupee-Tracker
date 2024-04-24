@@ -19,6 +19,11 @@ const columns = [
     key: "tag",
   },
   {
+    title: "Created At",
+    dataIndex: "createdAt",
+    key: "createdAt",
+  },
+  {
     title: "Type",
     dataIndex: "type",
     key: "type",
@@ -40,7 +45,7 @@ const DataTable = () => {
   const hanldeSortAmount = () => {
     const updatedArr = [...movementsArr].sort((a, b) => b.amount - a.amount);
     setMovementsArr(updatedArr);
-    console.log(updatedArr);
+    // console.log(updatedArr);
   };
 
   const handleNoSort = () => {
