@@ -104,7 +104,18 @@ function PieChart() {
   };
 
   console.log(expenses);
-  return <Doughnut data={data} options={options} />;
+  return (
+    <>
+      {expenses.length === 0 ? (
+        <h3 style={{ marginLeft: "1rem" }}>
+          {" "}
+          Seems like you haven't spend anything till now...
+        </h3>
+      ) : (
+        <Doughnut data={data} options={options} />
+      )}
+    </>
+  );
 }
 
 export default PieChart;

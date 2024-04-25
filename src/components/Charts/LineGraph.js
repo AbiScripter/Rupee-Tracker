@@ -90,6 +90,8 @@ export const options = {
 export function LineGraph() {
   const [chartData, setChartData] = useState(null);
   const graphData = useSelector((state) => state.account.graphData);
+  const k = useSelector((state) => state);
+  console.log(k);
 
   const formateDateAndPush = (date, labels) => {
     const formattedDate = `${date.slice(4, 10)} ${date.slice(13, 15)}`;
@@ -135,6 +137,7 @@ export function LineGraph() {
     }
   }, [graphData]);
 
+  console.log(chartData);
   if (!chartData) {
     return <div>Loading...</div>;
   }

@@ -3,6 +3,16 @@ body {
   margin: 0 auto; /* Center the body horizontally */
   border: 2px solid blue;
 }
+.dashboard-container {
+  min-height: 90vh;
+}
+
+.loader {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .balance-container {
   display: flex;

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Col, Row, Divider, Card } from "antd";
+import { Col, Row, Divider, Card, Spin } from "antd";
 import Header from "../components/Header";
 import { auth, db, doc } from "../firebase";
 import { collection, getDocs, updateDoc } from "firebase/firestore";
@@ -13,6 +13,7 @@ import DataTable from "../components/Tables";
 import LineGraph from "../components/Charts/LineGraph";
 import PieChart from "../components/Charts/PieChart";
 import "./Dashboard.css";
+import NoTransactions from "../components/NoTransactions";
 
 const Dashboard = () => {
   const [user, loading] = useAuthState(auth);
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const { userId, setTransactionId } = useContext(UserContext);
   const [prevUserId, setPrevUserId] = useState(null); // Initialize a state to store the previous userId
 
+  console.log(currAccount);
   //!fetching user data
   const fetchTranscations = async (subCollectionRef) => {
     try {
@@ -53,13 +55,14 @@ const Dashboard = () => {
   }, [userId, prevUserId]);
 
   return (
-    <>
+    <div className="dashboard-container">
       {loading ? (
-        <p>loading...</p>
+        <div className="loader">
+          <Spin size="large" />
+        </div>
       ) : (
         <div>
           <Header />
-          {/* <h1>{userId}</h1> */}
 
           <div className="balance-container">
             <div className="card card-balance">
@@ -74,18 +77,27 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="charts-container">
-            <div className="chart line-graph-container">
-              <LineGraph />
-            </div>
-            <div className="chart pie-chart-container">
-              <PieChart />
-            </div>
+          <div className="main-section">
+            {currAccount.expenses.length === 0 &&
+            currAccount.incomes.length === 0 ? (
+              <NoTransactions />
+            ) : (
+              <>
+                <div className="charts-container">
+                  <div className="chart line-graph-container">
+                    <LineGraph />
+                  </div>
+                  <div className="chart pie-chart-container">
+                    <PieChart />
+                  </div>
+                </div>
+                <DataTable />
+              </>
+            )}
           </div>
-          <DataTable />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

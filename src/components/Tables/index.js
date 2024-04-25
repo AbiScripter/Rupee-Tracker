@@ -1,6 +1,7 @@
 import { Button, Space, Table, Tag, Select, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import "./table.css";
 const { Search } = Input;
 const columns = [
   {
@@ -36,6 +37,11 @@ const DataTable = () => {
   const [movementsArr, setMovementsArr] = useState([]);
   const [filterValue, setFilterValue] = useState("all");
   const [category, setCategory] = useState("");
+  const defaultTitle = () => "Transaction History";
+  const tableProps = {
+    title: defaultTitle,
+    bordered: true,
+  };
 
   useEffect(() => {
     setMovementsArr(originalArr);
@@ -99,54 +105,69 @@ const DataTable = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="table-section">
+      <div className="table-sort-container">
         <Button onClick={hanldeSortAmount}>Sort By Amount</Button>
         <Button onClick={handleSortDate}>Sort By Date</Button>
-
-        <label>Filter By Type : </label>
-        <Select
-          value={filterValue}
-          style={{ width: 120 }}
-          onChange={handleFilterChange}
-          options={[
-            { value: "all", label: "All" },
-            { value: "income", label: "Income" },
-            { value: "expense", label: "Expenses" },
-          ]}
-        />
-
-        <label>Filter By Category : </label>
-        <Select
-          value={category}
-          style={{ width: 120 }}
-          onChange={handleCategoryChange}
-          options={[
-            { value: "salary", label: "Salary" },
-            { value: "investment", label: "Investment" },
-            { value: "freelance", label: "Freelance" },
-            { value: "business", label: "Business" },
-            { value: "rental", label: "Rental" },
-            { value: "houseing", label: "Housing" },
-            { value: "groceries", label: "Groceries" },
-            { value: "healthcare", label: "HealthCare" },
-            { value: "debt", label: "Debt" },
-            { value: "entertainment", label: "Entertainment" },
-            { value: "education", label: "Education" },
-            { value: "personal", label: "Personal" },
-          ]}
-        />
-        <Search
-          placeholder="input search text"
-          allowClear
-          onSearch={onSearch}
-          enterButton
-          style={{ width: 250 }}
-        />
         <Button onClick={handleNoSort}>Clear Sort and Filter</Button>
       </div>
 
-      <Table dataSource={movementsArr} columns={columns} />
+      <div className="table-filter-container">
+        <div>
+          <span>Filter By Type : </span>
+          <Select
+            value={filterValue}
+            style={{ width: 120 }}
+            onChange={handleFilterChange}
+            options={[
+              { value: "all", label: "All" },
+              { value: "income", label: "Income" },
+              { value: "expense", label: "Expenses" },
+            ]}
+          />
+        </div>
+        <div>
+          <span>Filter By Category : </span>
+          <Select
+            value={category}
+            style={{ width: 120 }}
+            onChange={handleCategoryChange}
+            options={[
+              { value: "salary", label: "Salary" },
+              { value: "investment", label: "Investment" },
+              { value: "freelance", label: "Freelance" },
+              { value: "business", label: "Business" },
+              { value: "rental", label: "Rental" },
+              { value: "houseing", label: "Housing" },
+              { value: "groceries", label: "Groceries" },
+              { value: "healthcare", label: "HealthCare" },
+              { value: "debt", label: "Debt" },
+              { value: "entertainment", label: "Entertainment" },
+              { value: "education", label: "Education" },
+              { value: "personal", label: "Personal" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <Search
+        placeholder="search by source"
+        allowClear
+        onSearch={onSearch}
+        enterButton
+        style={{ width: 300 }}
+        className="source-search"
+      />
+
+      <Table
+        {...tableProps}
+        dataSource={movementsArr}
+        columns={columns}
+        pagination={false}
+        // size="middle"
+        className="table"
+        scroll={{ x: 400 }}
+      />
     </div>
   );
 };
