@@ -7,22 +7,20 @@ import {
 } from "../../accountSlice";
 import { genRandomKey } from "../../App";
 import { UserContext } from "../../context/userContext";
-import { Form, DatePicker, Input, InputNumber, Select, Button } from "antd";
+import { Modal, Button } from "antd";
+import IncomeForm from "./IncomeForm";
 const Income = () => {
-  const [form] = Form.useForm();
   const { userId, transactionId } = useContext(UserContext);
-  const [incomeSource, setIncomeSource] = useState("");
-  const [incomeAmount, setIncomeAmount] = useState("");
-  const [incomeTag, setIncomeTag] = useState("salary");
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleAddIncome = async (data) => {
     const incomeData = {
       amount: Number(data.amount),
       source: data.source,
       tag: data.tag,
-      createdAt: String(data.created.$d),
+      createdAt: String(data.created.$d.toDateString()),
       type: "income",
       key: genRandomKey(),
     };
@@ -36,53 +34,32 @@ const Income = () => {
         transactionId
       )
     );
+
+    setOpenModal(false);
+  };
+
+  const showModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
   };
 
   return (
-    <div>
-      <h3>Total Income : {currAccount.totalIncome}</h3>
-      <Form onFinish={handleAddIncome} form={form} variant="filled">
-        <Form.Item
-          label="source"
-          name="source"
-          rules={[
-            { required: true, message: "Please input your source of income!" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="amount"
-          name="amount"
-          rules={[{ required: true, message: "Please input amount!" }]}
-        >
-          <InputNumber />
-        </Form.Item>
-
-        <Form.Item
-          label="created"
-          name="created"
-          rules={[{ required: true, message: "Please enter date!" }]}
-        >
-          <DatePicker />
-        </Form.Item>
-
-        <Form.Item
-          label="tag"
-          name="tag"
-          rules={[{ required: true, message: "Please enter tag!" }]}
-        >
-          <Select>
-            <Select.Option value="salary">Salary</Select.Option>
-            <Select.Option value="investment">Investment</Select.Option>
-            <Select.Option value="others">Others</Select.Option>
-          </Select>
-        </Form.Item>
-        <Button type="primary" block htmlType="submit">
-          Add Income
-        </Button>
-      </Form>
-    </div>
+    <>
+      <h3>Income</h3>
+      <h1>₹{currAccount.totalIncome}</h1>
+      <Button onClick={showModal}>Add Income</Button>
+      <Modal
+        open={openModal}
+        title="Income"
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <IncomeForm handleAddIncome={handleAddIncome} />
+      </Modal>
+    </>
   );
 };
 

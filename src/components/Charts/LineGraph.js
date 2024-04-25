@@ -92,7 +92,7 @@ export function LineGraph() {
   const graphData = useSelector((state) => state.account.graphData);
 
   const formateDateAndPush = (date, labels) => {
-    const formattedDate = date.slice(4, 15);
+    const formattedDate = `${date.slice(4, 10)} ${date.slice(13, 15)}`;
     labels.push(formattedDate);
   };
 

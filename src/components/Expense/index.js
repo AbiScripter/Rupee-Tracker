@@ -8,13 +8,14 @@ import {
 } from "../../accountSlice";
 import { genRandomKey } from "../../App";
 import { UserContext } from "../../context/userContext";
-import { Form, DatePicker, Input, InputNumber, Select, Button } from "antd";
+import { Modal, Button } from "antd";
+import ExpenseForm from "./ExpenseForm";
 
 const Expense = () => {
-  const [form] = Form.useForm();
   const { userId, transactionId } = useContext(UserContext);
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleAddExpense = async (data) => {
     // console.log(data);
@@ -36,55 +37,31 @@ const Expense = () => {
         transactionId
       )
     );
+    setOpenModal(false);
+  };
+
+  const showModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
   };
 
   return (
-    <div>
-      <h3>Total Expense : {currAccount.totalExpense}</h3>
-
-      <Form onFinish={handleAddExpense} form={form} variant="filled">
-        <Form.Item
-          label="source"
-          name="source"
-          rules={[
-            { required: true, message: "Please input your source of expense!" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="amount"
-          name="amount"
-          rules={[{ required: true, message: "Please input amount!" }]}
-        >
-          <InputNumber />
-        </Form.Item>
-
-        <Form.Item
-          label="created"
-          name="created"
-          rules={[{ required: true, message: "Please enter date!" }]}
-        >
-          <DatePicker />
-        </Form.Item>
-
-        <Form.Item
-          label="tag"
-          name="tag"
-          rules={[{ required: true, message: "Please enter tag!" }]}
-        >
-          <Select>
-            <Select.Option value="academic">Academic</Select.Option>
-            <Select.Option value="food">Food</Select.Option>
-            <Select.Option value="entertainment">Entertainment</Select.Option>
-            <Select.Option value="others">other</Select.Option>
-          </Select>
-        </Form.Item>
-        <Button type="primary" block htmlType="submit">
-          Add Expense
-        </Button>
-      </Form>
-    </div>
+    <>
+      <h3>Expenses</h3>
+      <h1>₹{currAccount.totalExpense}</h1>
+      <Button onClick={showModal}>Add Expense</Button>
+      <Modal
+        open={openModal}
+        title="Expense"
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <ExpenseForm handleAddExpense={handleAddExpense} />
+      </Modal>
+    </>
   );
 };
 
