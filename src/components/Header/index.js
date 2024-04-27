@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { reset } from "../../accountSlice";
 import { useDispatch } from "react-redux";
 import { UserContext } from "../../context/userContext";
+import Logo from "../Logo/Logo";
 const Header = () => {
   const { setUserId } = useContext(UserContext);
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ const Header = () => {
 
   return (
     <div className="nav-bar">
-      <h2 className="app-logo">Rupee Tracker</h2>
+      {/* <h2 className="app-logo">Rupee Tracker</h2> */}
+      <Logo />
       {user && <Button onClick={handleSignOut}>Sign Out</Button>}
     </div>
   );

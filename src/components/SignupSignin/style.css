@@ -17,6 +17,11 @@
   border: none;
 }
 
+.signin-form-container {
+  text-align: center;
+  width: 25rem;
+}
+
 .form-link {
   color: #4896fb;
   text-decoration: underline;
@@ -30,7 +35,6 @@
 
 .form-tag-text {
   margin-top: 2rem;
-  font-family: "Carter One", system-ui;
 }
 
 @media (width < 992px) {
