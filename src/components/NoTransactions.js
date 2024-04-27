@@ -15,9 +15,10 @@ function NoTransactions() {
       <img
         alt="no-transactions"
         src={transactions}
-        style={{ width: "400px", margin: "4rem" }}
+        style={{ margin: "4rem" }}
+        className="no-transactions-img"
       />
-      <p style={{ textAlign: "center", fontSize: "1.2rem" }}>
+      <p className="no-transactions-text" style={{ textAlign: "center" }}>
         You Have No Transactions Currently
       </p>
     </div>

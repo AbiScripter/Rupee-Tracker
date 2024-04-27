@@ -1,8 +1,7 @@
 import React from "react";
 import { Form, DatePicker, Input, InputNumber, Select, Button } from "antd";
 
-const IncomeForm = ({ handleAddIncome }) => {
-  const [form] = Form.useForm();
+const IncomeForm = ({ handleAddIncome, form }) => {
   return (
     <Form onFinish={handleAddIncome} form={form} variant="filled">
       <Form.Item

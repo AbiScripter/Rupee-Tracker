@@ -103,7 +103,7 @@ function PieChart() {
     ],
   };
 
-  console.log(expenses);
+  // console.log(expenses);
   return (
     <>
       {expenses.length === 0 ? (

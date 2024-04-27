@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Col, Row, Divider, Card, Spin } from "antd";
 import Header from "../components/Header";
 import { auth, db, doc } from "../firebase";
-import { collection, getDocs, updateDoc } from "firebase/firestore";
+import { collection, getDocs, updateDoc, getDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { initiateStateLogin } from "../accountSlice";
@@ -18,15 +18,49 @@ import NoTransactions from "../components/NoTransactions";
 const Dashboard = () => {
   const [user, loading] = useAuthState(auth);
   const currAccount = useSelector((state) => state.account);
-  // console.log("from dashboard........", currAccount);
   const dispatch = useDispatch();
   const { userId, setTransactionId } = useContext(UserContext);
   const [prevUserId, setPrevUserId] = useState(null); // Initialize a state to store the previous userId
+  const [userData, setUserData] = useState(null);
+  const [userLoading, setUserLoading] = useState(false);
 
-  console.log(currAccount);
+  console.log("useAuth", user);
+
   //!fetching user data
+  useEffect(() => {
+    setUserLoading(true);
+    const id = setTimeout(() => {
+      const userDocRef = doc(db, "users", userId);
+      if (userId && userId !== prevUserId) {
+        fetchUserData(userDocRef);
+        setPrevUserId(userId); // Update the previous userId
+      }
+    }, 1000);
+
+    return () => clearTimeout(id);
+  }, [userId, prevUserId]);
+
+  const fetchUserData = async (docref) => {
+    try {
+      const userDocSnapshot = await getDoc(docref);
+      if (userDocSnapshot.exists()) {
+        setUserData(userDocSnapshot.data());
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  console.log(userData);
+
+  //!fetching user transaction data
   const fetchTranscations = async (subCollectionRef) => {
     try {
+      console.log("ommaalaokk");
       const subCollectionSnapshot = await getDocs(subCollectionRef);
       const subCollectionData = subCollectionSnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -55,47 +89,63 @@ const Dashboard = () => {
   }, [userId, prevUserId]);
 
   return (
-    <div className="dashboard-container">
+    <div
+      className="app-container"
+      // style={{ display: `${userLoading ? "none" : "block"}` }}
+    >
       {loading ? (
         <div className="loader">
           <Spin size="large" />
         </div>
       ) : (
-        <div>
+        <>
           <Header />
 
-          <div className="balance-container">
-            <div className="card card-balance">
-              <h3>Balance</h3>
-              <h1>₹{currAccount.currBalance}</h1>
+          {userLoading ? (
+            <div className="loader">
+              <Spin size="large" />
             </div>
-            <div className="card">
-              <Income />
-            </div>
-            <div className="card">
-              <Expense />
-            </div>
-          </div>
-
-          <div className="main-section">
-            {currAccount.expenses.length === 0 &&
-            currAccount.incomes.length === 0 ? (
-              <NoTransactions />
-            ) : (
-              <>
-                <div className="charts-container">
-                  <div className="chart line-graph-container">
-                    <LineGraph />
+          ) : (
+            <>
+              <h2 className="hello-user">
+                {userLoading ? " " : `Hello ${userData?.name} 👋`}
+              </h2>
+              <div className="content-container">
+                <div className="balance-container">
+                  <div className="card card-balance">
+                    <h3>Balance</h3>
+                    <h1>₹{currAccount.currBalance}</h1>
                   </div>
-                  <div className="chart pie-chart-container">
-                    <PieChart />
+                  <div className="card">
+                    <Income />
+                  </div>
+                  <div className="card">
+                    <Expense />
                   </div>
                 </div>
-                <DataTable />
-              </>
-            )}
-          </div>
-        </div>
+
+                <div className="main-section">
+                  {currAccount.expenses.length === 0 &&
+                  currAccount.incomes.length === 0 ? (
+                    <NoTransactions />
+                  ) : (
+                    <>
+                      <div className="charts-container">
+                        <div className="chart line-graph-container">
+                          <LineGraph />
+                        </div>
+                        <div className="chart pie-chart-container">
+                          <PieChart />
+                        </div>
+                      </div>
+                      <DataTable />
+                    </>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </>
       )}
     </div>
   );

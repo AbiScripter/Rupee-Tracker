@@ -1,10 +1,12 @@
-body {
-  max-width: 85%;
-  margin: 0 auto; /* Center the body horizontally */
-  border: 2px solid blue;
-}
-.dashboard-container {
+.app-container {
   min-height: 90vh;
+}
+
+.content-container {
+  max-width: 85%;
+  margin: 0 auto;
+  /* border: 2px solid red; */
+  margin-top: 1rem;
 }
 
 .loader {
@@ -18,6 +20,13 @@ body {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
+  /* border: 2px solid aqua; */
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.main-section {
+  /* border: 2px solid goldenrod; */
 }
 
 .card {
@@ -48,10 +57,15 @@ body {
   }
 }
 
+.hello-user {
+  min-height: 2rem;
+  text-align: center;
+}
+
 /* ! CHARTS */
 
 .charts-container {
-  background-color: beige;
+  /* background-color: beige; */
   padding: 1rem;
   display: flex;
   justify-content: center;
@@ -67,14 +81,24 @@ body {
 }
 
 .line-graph-container {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   width: 60%;
 }
 
 .pie-chart-container {
-  border: 1px solid black;
-  width: 40%;
+  /* border: 1px solid black; */
+  width: 30%;
 }
+
+.no-transactions-img {
+  width: 300px;
+}
+
+.no-transactions-text {
+  font-size: 1.2rem;
+}
+
+/* ! MEDIA QUERIES */
 
 @media (width < 796px) {
   .balance-container {
@@ -98,18 +122,18 @@ body {
   }
 
   .line-graph-container {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 100%;
   }
 
   .pie-chart-container {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 60%;
   }
 }
 
 @media (width < 576px) {
-  body {
+  .content-container {
     max-width: 100%;
   }
 
@@ -145,7 +169,7 @@ body {
 
   .line-graph-container {
     min-height: 12rem !important;
-    border: 2px solid red;
+    /* border: 2px solid red; */
   }
 
   .pie-chart-container {
@@ -175,12 +199,20 @@ body {
   }
 
   .pie-chart-container {
-    width: 100%;
+    width: 0%;
+  }
+
+  .no-transactions-text {
+    font-size: 1rem;
   }
 }
 
 @media (width < 340px) {
   .line-graph-container {
     display: none;
+  }
+
+  .no-transactions-img {
+    width: 200px;
   }
 }

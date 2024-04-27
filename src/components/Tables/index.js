@@ -37,6 +37,7 @@ const DataTable = () => {
   const [movementsArr, setMovementsArr] = useState([]);
   const [filterValue, setFilterValue] = useState("all");
   const [category, setCategory] = useState("");
+  const [sort, setSort] = useState("");
   const defaultTitle = () => "Transaction History";
   const tableProps = {
     title: defaultTitle,
@@ -46,12 +47,6 @@ const DataTable = () => {
   useEffect(() => {
     setMovementsArr(originalArr);
   }, [currAccount]);
-
-  console.log(movementsArr);
-
-  movementsArr.forEach((trans) => {
-    console.log(trans.createdAt.slice(0, 14));
-  });
 
   //! Sort
   const hanldeSortAmount = () => {
@@ -96,23 +91,42 @@ const DataTable = () => {
   };
 
   const onSearch = (value) => {
-    console.log(value);
+    // console.log(value);
     const filteredArr = [...originalArr].filter((trans) =>
       trans.source.includes(value)
     );
-    console.log(filteredArr);
+    // console.log(filteredArr);
     setMovementsArr(filteredArr);
+  };
+
+  const onSort = (value) => {
+    setSort(value);
+    if (value === "amount") {
+      hanldeSortAmount();
+    } else if (value === "date") {
+      handleSortDate();
+    } else {
+      handleNoSort();
+    }
   };
 
   return (
     <div className="table-section">
-      <div className="table-sort-container">
-        <Button onClick={hanldeSortAmount}>Sort By Amount</Button>
-        <Button onClick={handleSortDate}>Sort By Date</Button>
-        <Button onClick={handleNoSort}>Clear Sort and Filter</Button>
-      </div>
-
       <div className="table-filter-container">
+        <div>
+          <span>Sort : </span>
+          <Select
+            value={sort}
+            style={{ width: 120 }}
+            onChange={onSort}
+            options={[
+              { value: "amount", label: "By Amount" },
+              { value: "date", label: "By Date" },
+              { value: "clear", label: "Clear Sort" },
+            ]}
+          />
+        </div>
+
         <div>
           <span>Filter By Type : </span>
           <Select

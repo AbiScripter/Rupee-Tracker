@@ -9,11 +9,14 @@ import { genRandomKey } from "../../App";
 import { UserContext } from "../../context/userContext";
 import { Modal, Button } from "antd";
 import IncomeForm from "./IncomeForm";
+import { Form } from "antd";
+
 const Income = () => {
   const { userId, transactionId } = useContext(UserContext);
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
+  const [form] = Form.useForm();
 
   const handleAddIncome = async (data) => {
     const incomeData = {
@@ -36,6 +39,7 @@ const Income = () => {
     );
 
     setOpenModal(false);
+    form.resetFields();
   };
 
   const showModal = () => {
@@ -57,7 +61,7 @@ const Income = () => {
         onCancel={handleCancel}
         footer={null}
       >
-        <IncomeForm handleAddIncome={handleAddIncome} />
+        <IncomeForm handleAddIncome={handleAddIncome} form={form} />
       </Modal>
     </>
   );

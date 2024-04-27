@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Card, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import signInUser from "../../utils/signInUtils";
 import googleSignIn from "../../utils/googleSignIn";
@@ -15,9 +15,12 @@ const SignInForm = ({ setIsSignInTab }) => {
 
   async function handleFormSubmit(data) {
     const userData = await signInUser(data, setIsLoading);
+    console.log(userData);
     //if signin succes it return userdata
     //if signin fails it returns null
     if (userData !== null) {
+      // localStorage.setItem('username',)
+
       // console.log(userData);
       setUserId(userData.uid);
       navigate("/dashboard");
@@ -33,19 +36,17 @@ const SignInForm = ({ setIsSignInTab }) => {
   }
 
   return (
-    <div>
-      <h3>
-        Sign In with <span style={{ color: "orange" }}> Rupee Tracker</span>
-      </h3>
+    <Card className="signin-form-container">
+      <h2>Hi, Welcome Back 👋</h2>
       <Form
         onFinish={handleFormSubmit}
         form={form}
-        variant="filled"
+        // variant="filled"
         style={{ maxWidth: 600 }}
+        layout="vertical"
       >
         <Form.Item
           name="email"
-          label="E-mail"
           rules={[
             {
               type: "email",
@@ -57,11 +58,10 @@ const SignInForm = ({ setIsSignInTab }) => {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter Your Email" />
         </Form.Item>
         <Form.Item
           name="password"
-          label="Password"
           rules={[
             {
               required: true,
@@ -70,28 +70,31 @@ const SignInForm = ({ setIsSignInTab }) => {
           ]}
           hasFeedback
         >
-          <Input.Password />
+          <Input.Password placeholder="Enter Your Password" />
         </Form.Item>
 
         <Button type="primary" block htmlType="submit" loading={isLoading}>
-          Sign In
+          Login
         </Button>
         <p>
-          Don't have an acoount
-          <button onClick={() => setIsSignInTab((prev) => !prev)}>
+          Don't have an acoount ?&nbsp;
+          <span
+            className="form-link"
+            onClick={() => setIsSignInTab((prev) => !prev)}
+          >
             Sign Up
-          </button>
+          </span>
         </p>
-        <Button
+        {/* <Button
           type="primary"
           block
           onClick={handleGoogleSignIn}
           loading={isLoading}
         >
           Sign In with Google
-        </Button>
+        </Button> */}
       </Form>
-    </div>
+    </Card>
   );
 };
 

@@ -1,14 +1,9 @@
 import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addExpense,
-  addExpenseAsync,
-  addGraph,
-  addGraphDataAsync,
-} from "../../accountSlice";
+import { addExpenseAsync, addGraphDataAsync } from "../../accountSlice";
 import { genRandomKey } from "../../App";
 import { UserContext } from "../../context/userContext";
-import { Modal, Button } from "antd";
+import { Modal, Button, Form } from "antd";
 import ExpenseForm from "./ExpenseForm";
 
 const Expense = () => {
@@ -16,6 +11,7 @@ const Expense = () => {
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
+  const [form] = Form.useForm();
 
   const handleAddExpense = async (data) => {
     // console.log(data);
@@ -23,7 +19,7 @@ const Expense = () => {
       amount: Number(data.amount),
       source: data.source,
       tag: data.tag,
-      createdAt: String(data.created.$d),
+      createdAt: String(data.created.$d.toDateString()),
       type: "expense",
       key: genRandomKey(),
     };
@@ -38,6 +34,7 @@ const Expense = () => {
       )
     );
     setOpenModal(false);
+    form.resetFields();
   };
 
   const showModal = () => {
@@ -59,7 +56,7 @@ const Expense = () => {
         onCancel={handleCancel}
         footer={null}
       >
-        <ExpenseForm handleAddExpense={handleAddExpense} />
+        <ExpenseForm handleAddExpense={handleAddExpense} form={form} />
       </Modal>
     </>
   );

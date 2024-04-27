@@ -38,7 +38,7 @@ const Header = () => {
 
   return (
     <div className="nav-bar">
-      <h3>Rupee Tracker</h3>
+      <h2 className="app-logo">Rupee Tracker</h2>
       {user && <Button onClick={handleSignOut}>Sign Out</Button>}
     </div>
   );

@@ -1,0 +1,56 @@
+.form-containers {
+  /* border: 2px solid red; */
+  /* background-color: red; */
+  margin-top: 10vh;
+  display: flex;
+  justify-content: center;
+
+  ::placeholder {
+    color: black;
+    opacity: 0.5;
+  }
+}
+
+.signup-form-container {
+  text-align: center;
+  width: 450px;
+  border: none;
+}
+
+.form-link {
+  color: #4896fb;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.formimg {
+  margin-top: -3rem;
+}
+
+.form-tag-text {
+  margin-top: 2rem;
+  font-family: "Carter One", system-ui;
+}
+
+@media (width < 992px) {
+  .formimg {
+    width: 18rem;
+  }
+}
+
+@media (width < 768px) {
+  .formimg {
+    width: 15rem;
+  }
+
+  .form-tag-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (width < 576px) {
+  .formimg {
+    display: none;
+  }
+}

@@ -1,16 +1,11 @@
 .table-section {
-  background: gold;
+  /* background: gold; */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border: 2px solid red;
+  /* border: 2px solid red; */
   padding: 1rem;
   align-items: center;
-}
-
-.table-sort-container {
-  display: flex;
-  gap: 2rem;
 }
 
 .table-filter-container {
@@ -35,12 +30,6 @@
 
   .table-section {
     gap: 0.5rem;
-  }
-
-  .table-sort-container {
-    gap: 0.2rem;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
   .table-filter-container {
