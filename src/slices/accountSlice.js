@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import UpdateTrans from "./utils/updateTransactions";
+import updateTransactions from "../utils/updateTransactions";
 
 const initialState = {
   currBalance: 0,
@@ -23,17 +23,24 @@ const accountSlice = createSlice({
   initialState: initialState,
   reducers: {
     addIncome: (state, action) => {
-      state.incomes.push(action.payload);
+      state.incomes.push(action.payload.incomeData);
       state.totalIncome = calcTotalIncome(state.incomes);
       state.currBalance = state.totalIncome - state.totalExpense;
+      updateTransactions(state, action.payload.userId, action.payload.transId);
     },
     addExpense(state, action) {
-      state.expenses = [...state.expenses, action.payload];
+      // state.expenses = [...state.expenses, action.payload];
+      state.expenses.push(action.payload.expenseData);
       state.totalExpense = calcTotalExpense(state.expenses);
       state.currBalance = state.totalIncome - state.totalExpense;
+      updateTransactions(state, action.payload.userId, action.payload.transId);
     },
     addGraph(state, action) {
-      state.graphData.push(action.payload);
+      state.graphData.push({
+        amount: action.payload.amount,
+        createdAt: action.payload.createdAt,
+      });
+      updateTransactions(state, action.payload.userId, action.payload.transId);
       // console.log(action.payload);
     },
 
@@ -50,30 +57,5 @@ const accountSlice = createSlice({
 
 export const { addIncome, addExpense, initiateStateLogin, addGraph, reset } =
   accountSlice.actions;
-
-export const addIncomeAsync =
-  (incomeData, userId, transactionId) => async (dispatch, getState) => {
-    dispatch(addIncome(incomeData));
-    const state = getState().account;
-    const { updateTransactions } = UpdateTrans(userId, transactionId);
-    await updateTransactions(state);
-  };
-
-export const addExpenseAsync =
-  (expenseData, userId, transactionId) => async (dispatch, getState) => {
-    dispatch(addExpense(expenseData));
-    const state = getState().account;
-    const { updateTransactions } = UpdateTrans(userId, transactionId);
-    await updateTransactions(state);
-  };
-
-export const addGraphDataAsync =
-  (amount, createdAt, userId, transactionId) => async (dispatch, getState) => {
-    dispatch(addGraph({ amount: amount, createdAt: createdAt }));
-    //   addGraph({ amount: -data.amount, createdAt: String(data.created.$d) })
-    const state = getState().account;
-    const { updateTransactions } = UpdateTrans(userId, transactionId);
-    await updateTransactions(state);
-  };
 
 export default accountSlice.reducer;

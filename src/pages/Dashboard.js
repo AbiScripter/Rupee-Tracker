@@ -1,12 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Col, Row, Divider, Card, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { Spin, Button } from "antd";
 import Header from "../components/Header";
 import { auth, db, doc } from "../firebase";
-import { collection, getDocs, updateDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  getDoc,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { initiateStateLogin } from "../accountSlice";
-import { UserContext } from "../context/userContext";
+import { initiateStateLogin, reset } from "../slices/accountSlice";
 import Expense from "../components/Expense";
 import Income from "../components/Income";
 import DataTable from "../components/Tables";
@@ -14,85 +20,111 @@ import LineGraph from "../components/Charts/LineGraph";
 import PieChart from "../components/Charts/PieChart";
 import "./Dashboard.css";
 import NoTransactions from "../components/NoTransactions";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { setUser } from "../slices/userSlice";
 
 const Dashboard = () => {
   const [user, loading] = useAuthState(auth);
   const currAccount = useSelector((state) => state.account);
+  const currUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const { userId, setTransactionId } = useContext(UserContext);
   const [prevUserId, setPrevUserId] = useState(null); // Initialize a state to store the previous userId
-  const [userData, setUserData] = useState(null);
   const [userLoading, setUserLoading] = useState(false);
+  const navigate = useNavigate();
 
-  console.log("useAuth", user);
-
-  //!fetching user data
-  useEffect(() => {
-    setUserLoading(true);
-    const id = setTimeout(() => {
-      const userDocRef = doc(db, "users", userId);
-      if (userId && userId !== prevUserId) {
-        fetchUserData(userDocRef);
-        setPrevUserId(userId); // Update the previous userId
-      }
-    }, 1000);
-
-    return () => clearTimeout(id);
-  }, [userId, prevUserId]);
-
-  const fetchUserData = async (docref) => {
+  async function handleSignOut() {
     try {
-      const userDocSnapshot = await getDoc(docref);
-      if (userDocSnapshot.exists()) {
-        setUserData(userDocSnapshot.data());
-      } else {
-        console.log("No such document!");
-      }
+      await signOut(auth);
+      dispatch(reset());
+      // Sign-out successful.
+      navigate("/");
+      toast.success("signed out");
     } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setUserLoading(false);
+      // An error happened.
+      console.error(error.message);
     }
-  };
-
-  console.log(userData);
+  }
 
   //!fetching user transaction data
-  const fetchTranscations = async (subCollectionRef) => {
-    try {
-      console.log("ommaalaokk");
-      const subCollectionSnapshot = await getDocs(subCollectionRef);
-      const subCollectionData = subCollectionSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      // console.log(subCollectionData);
-      dispatch(initiateStateLogin(subCollectionData[0]));
-      setTransactionId(subCollectionData[0]?.id);
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
-  };
 
-  //!only fetch data at initial render
+  //!  method using onsnapshot
   useEffect(() => {
-    const id = setTimeout(() => {
-      const subCollectionRef = collection(db, `users/${userId}/transactions`);
-      if (userId && userId !== prevUserId) {
-        fetchTranscations(subCollectionRef);
-        setPrevUserId(userId); // Update the previous userId
-      }
-    }, 1000);
+    let idIfAvailable = "";
 
-    return () => clearTimeout(id);
-  }, [userId, prevUserId]);
+    if (currUser) {
+      idIfAvailable = currUser.uid;
+    } else {
+      idIfAvailable = user.uid;
+    }
+    const unsubscribe = onSnapshot(
+      query(collection(db, `users/${idIfAvailable}/transactions`)),
+      (querySnapshot) => {
+        const temp = [];
+        querySnapshot.forEach((doc) => {
+          temp.push({ id: doc.id, ...doc.data() });
+        });
+        // console.log("yes", temp[0]?.id);
+        dispatch(initiateStateLogin(temp[0]));
+        dispatch(setUser({ ...currUser, transactionId: temp[0]?.id }));
+      },
+      (error) => {
+        console.error("Error fetching podcasts:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [currUser?.uid]);
+
+  //!another method
+  // const fetchTranscations = async (subCollectionRef) => {
+  //   try {
+  //     console.log("ommaalaokk");
+  //     const subCollectionSnapshot = await getDocs(subCollectionRef);
+  //     const subCollectionData = subCollectionSnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //     console.log(subCollectionData);
+  //     dispatch(initiateStateLogin(subCollectionData[0]));
+  //     dispatch(
+  //       setUser({ ...currUser, transactionId: subCollectionData[0].id })
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // // //!only fetch data at initial render
+  // useEffect(() => {
+  //   let idIfAvailable = "";
+  //   if (currUser) {
+  //     idIfAvailable = currUser.uid;
+  //   } else {
+  //     idIfAvailable = user.uid;
+  //   }
+  //   const id = setTimeout(() => {
+  //     console.log(currUser);
+  //     const subCollectionRef = collection(
+  //       db,
+  //       `users/${idIfAvailable}/transactions`
+  //     );
+  //     if (idIfAvailable && idIfAvailable !== prevUserId) {
+  //       fetchTranscations(subCollectionRef);
+  //       setPrevUserId(idIfAvailable); // Update the previous userId
+  //     }
+  //   }, 1000);
+
+  //   return () => clearTimeout(id);
+  // }, [currUser]);
+
+  //
 
   return (
-    <div
-      className="app-container"
-      // style={{ display: `${userLoading ? "none" : "block"}` }}
-    >
+    <div className="app-container">
       {loading ? (
         <div className="loader">
           <Spin size="large" />
@@ -100,7 +132,9 @@ const Dashboard = () => {
       ) : (
         <>
           <Header />
-
+          <Button className="sign-out-btn" onClick={handleSignOut}>
+            SignOut
+          </Button>
           {userLoading ? (
             <div className="loader">
               <Spin size="large" />
@@ -108,7 +142,7 @@ const Dashboard = () => {
           ) : (
             <>
               <h2 className="hello-user">
-                {userLoading ? " " : `Hello ${userData?.name} 👋`}
+                {userLoading ? " " : `Hello ${currUser?.name} 👋`}
               </h2>
               <div className="content-container">
                 <div className="balance-container">
@@ -152,18 +186,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// Extra small devices (portrait phones, less than 576px)
-// No media query since this is the default in BootstrapXS
-
-// Small devices (landscape phones, 576px and up)SM
-// @media (min-width: 576px) { ... }
-
-// Medium devices (tablets, 768px and up)MD
-// @media (min-width: 768px) { ... }
-
-// Large devices (desktops, 992px and up)LG
-// @media (min-width: 992px) { ... }
-
-// Extra large devices (large desktops, 1200px and up)Xl
-// @media (min-width: 1200px) { ... }

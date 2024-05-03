@@ -16,6 +16,12 @@
   align-items: center;
 }
 
+.sign-out-btn {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+}
+
 .balance-container {
   display: flex;
   gap: 0.5rem;
@@ -137,6 +143,11 @@
     max-width: 100%;
   }
 
+  .sign-out-btn {
+    right: 5px;
+    top: 10px;
+  }
+
   .balance-container {
     flex-direction: column;
 
@@ -216,3 +227,19 @@
     width: 200px;
   }
 }
+/* 
+Extra small devices (portrait phones, less than 576px)
+ No media query since this is the default in BootstrapXS
+
+Small devices (landscape phones, 576px and up)SM
+@media (min-width: 576px) { ... }
+
+Medium devices (tablets, 768px and up)MD
+@media (min-width: 768px) { ... }
+
+Large devices (desktops, 992px and up)LG
+@media (min-width: 992px) { ... }
+
+Extra large devices (large desktops, 1200px and up)Xl
+@media (min-width: 1200px) { ... }
+*/

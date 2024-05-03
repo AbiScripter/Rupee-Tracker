@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie, Doughnut } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -103,7 +103,6 @@ function PieChart() {
     ],
   };
 
-  // console.log(expenses);
   return (
     <>
       {expenses.length === 0 ? (

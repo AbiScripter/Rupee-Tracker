@@ -1,24 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addGraph,
-  addGraphDataAsync,
-  addIncomeAsync,
-} from "../../accountSlice";
+import { addGraph, addIncome } from "../../slices/accountSlice";
 import { genRandomKey } from "../../App";
-import { UserContext } from "../../context/userContext";
 import { Modal, Button } from "antd";
 import IncomeForm from "./IncomeForm";
 import { Form } from "antd";
 
 const Income = () => {
-  const { userId, transactionId } = useContext(UserContext);
+  const currUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
   const [form] = Form.useForm();
 
-  const handleAddIncome = async (data) => {
+  const handleAddIncome = (data) => {
     const incomeData = {
       amount: Number(data.amount),
       source: data.source,
@@ -27,15 +22,22 @@ const Income = () => {
       type: "income",
       key: genRandomKey(),
     };
-    await dispatch(addIncomeAsync(incomeData, userId, transactionId)); //passing data to redux thunk
 
-    await dispatch(
-      addGraphDataAsync(
-        data.amount,
-        String(data.created.$d),
-        userId,
-        transactionId
-      )
+    dispatch(
+      addIncome({
+        incomeData: incomeData,
+        userId: currUser.uid,
+        transId: currUser.transactionId,
+      }) //passing data to redux thunk
+    );
+
+    dispatch(
+      addGraph({
+        amount: data.amount,
+        createdAt: String(data.created.$d),
+        userId: currUser.uid,
+        transId: currUser.transactionId,
+      })
     );
 
     setOpenModal(false);

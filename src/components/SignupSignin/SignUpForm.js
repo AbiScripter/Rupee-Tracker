@@ -1,15 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Card } from "antd";
 import signUpUser from "../../utils/signUpUtils";
 import createDoc from "../../utils/createDocUtils";
-import googleSignIn from "../../utils/googleSignIn";
 import { useSelector } from "react-redux";
-import { UserContext } from "../../context/userContext";
 import FormImg from "../FormImg";
+import GoogleLoginForm from "./GoogleLoginForm";
 
 const SignUpForm = ({ setIsSignInTab }) => {
-  const { setUserId } = useContext(UserContext);
+  // const { setUserId } = useContext(UserContext);
   const account = useSelector((state) => state.account);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
@@ -18,27 +17,17 @@ const SignUpForm = ({ setIsSignInTab }) => {
   // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   async function handleFormSubmit(data) {
-    const userData = await signUpUser(data, setIsLoading);
+    const user = await signUpUser(data, setIsLoading);
+    console.log(user);
+
     //if signin succes it return userdata
     //if signin fails it returns null
-    if (userData !== null) {
-      console.log(userData);
-      createDoc(userData, data.username, account);
-      // dispatch(updateUserId(userData.uid));
-      setUserId(userData.uid);
-
-      // Navigate to the dashboard page
+    if (user !== null) {
+      createDoc(user, data.username, account);
       navigate("/dashboard");
     }
 
     // form.resetFields(); //reset the form
-  }
-
-  async function handleGoogleSignIn() {
-    const googleData = await googleSignIn(setIsLoading);
-    console.log(googleData);
-    createDoc(googleData.user, "random");
-    navigate("/dashboard");
   }
 
   return (
@@ -127,14 +116,7 @@ const SignUpForm = ({ setIsSignInTab }) => {
           </p>
           <h1 className="form-tag-text">Take charge of your money today!</h1>
           {/* //! TODO: implement signup */}
-          {/* <Button
-          type="primary"
-          block
-          onClick={handleGoogleSignIn}
-          loading={isLoading}
-        >
-          Sign Up with Google
-        </Button> */}
+          <GoogleLoginForm />
         </Form>
       </Card>
     </>

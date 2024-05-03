@@ -1,13 +1,14 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addExpenseAsync, addGraphDataAsync } from "../../accountSlice";
+// import { addExpenseAsync, addGraphDataAsync } from "../../slices/accountSlice";
 import { genRandomKey } from "../../App";
-import { UserContext } from "../../context/userContext";
 import { Modal, Button, Form } from "antd";
 import ExpenseForm from "./ExpenseForm";
+import { addExpense, addGraph } from "../../slices/accountSlice";
 
 const Expense = () => {
-  const { userId, transactionId } = useContext(UserContext);
+  // const { userId, transactionId } = useContext(UserContext);
+  const currUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
@@ -24,15 +25,21 @@ const Expense = () => {
       key: genRandomKey(),
     };
 
-    await dispatch(addExpenseAsync(expenseData, userId, transactionId));
-    await dispatch(
-      addGraphDataAsync(
-        -data.amount,
-        String(data.created.$d),
-        userId,
-        transactionId
-      )
+    dispatch(
+      addExpense({
+        expenseData: expenseData,
+        userId: currUser.uid,
+        transId: currUser.transactionId,
+      }) //passing data to redux thunk
     );
+
+    addGraph({
+      amount: -data.amount,
+      createdAt: String(data.created.$d),
+      userId: currUser.uid,
+      transId: currUser.transactionId,
+    });
+
     setOpenModal(false);
     form.resetFields();
   };
