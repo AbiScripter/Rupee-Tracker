@@ -33,12 +33,14 @@ const Expense = () => {
       }) //passing data to redux thunk
     );
 
-    addGraph({
-      amount: -data.amount,
-      createdAt: String(data.created.$d),
-      userId: currUser.uid,
-      transId: currUser.transactionId,
-    });
+    dispatch(
+      addGraph({
+        amount: -data.amount,
+        createdAt: String(data.created.$d),
+        userId: currUser.uid,
+        transId: currUser.transactionId,
+      })
+    );
 
     setOpenModal(false);
     form.resetFields();

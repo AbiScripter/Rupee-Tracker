@@ -17,6 +17,11 @@
   text-align: center;
 }
 
+.search-container {
+  display: flex;
+  gap: 1rem;
+}
+
 @media (width > 1200px) {
   .table {
     width: 70%;
@@ -47,6 +52,19 @@
   }
   .table-filter-container {
     gap: 0.5rem;
+  }
+  .search-container {
+    flex-direction: column;
+  }
+  .table-filter-container {
+    font-size: 0.8rem;
+  }
+}
+
+@media (width < 350px) {
+  .table-filter-container {
+    flex-direction: column;
+    text-align: center;
   }
 }
 

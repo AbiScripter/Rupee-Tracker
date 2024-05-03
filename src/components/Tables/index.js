@@ -63,7 +63,7 @@ const DataTable = () => {
     setMovementsArr(updatedArr);
   };
 
-  const handleNoSort = () => {
+  const clearSortAndFilter = () => {
     setFilterValue("all");
     setCategory("");
     setMovementsArr(originalArr);
@@ -106,7 +106,7 @@ const DataTable = () => {
     } else if (value === "date") {
       handleSortDate();
     } else {
-      handleNoSort();
+      clearSortAndFilter();
     }
   };
 
@@ -114,7 +114,7 @@ const DataTable = () => {
     <div className="table-section">
       <div className="table-filter-container">
         <div>
-          <span>Sort : </span>
+          <span>Sort</span>
           <Select
             value={sort}
             style={{ width: 120 }}
@@ -128,7 +128,7 @@ const DataTable = () => {
         </div>
 
         <div>
-          <span>Filter By Type : </span>
+          <span>Filter By Type</span>
           <Select
             value={filterValue}
             style={{ width: 120 }}
@@ -141,7 +141,7 @@ const DataTable = () => {
           />
         </div>
         <div>
-          <span>Filter By Category : </span>
+          <span>Filter By Category</span>
           <Select
             value={category}
             style={{ width: 120 }}
@@ -163,16 +163,16 @@ const DataTable = () => {
           />
         </div>
       </div>
-
-      <Search
-        placeholder="search by source"
-        allowClear
-        onSearch={onSearch}
-        enterButton
-        style={{ width: 300 }}
-        className="source-search"
-      />
-
+      <div className="search-container">
+        <Search
+          placeholder="search by source"
+          allowClear
+          onSearch={onSearch}
+          enterButton
+          className="source-search"
+        />
+        <Button onClick={clearSortAndFilter}>Clear Sort and Filter</Button>
+      </div>
       <Table
         {...tableProps}
         dataSource={movementsArr}

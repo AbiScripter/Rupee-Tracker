@@ -210,7 +210,7 @@
   }
 
   .pie-chart-container {
-    width: 0%;
+    display: none;
   }
 
   .no-transactions-text {
