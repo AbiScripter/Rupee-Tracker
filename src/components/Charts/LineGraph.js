@@ -29,7 +29,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Current Balance",
+      text: "Balance History",
     },
   },
 };
@@ -123,7 +123,7 @@ export function LineGraph() {
         labels,
         datasets: [
           {
-            label: "Current Balance",
+            label: "Balance",
             data: cumulativeAmount,
             borderColor: "rgb(255, 99, 132)",
             backgroundColor: "rgba(255, 99, 132, 0.5)",

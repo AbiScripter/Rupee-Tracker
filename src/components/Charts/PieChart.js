@@ -13,7 +13,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Current Balance",
+      text: "Total Expense",
     },
   },
 };
