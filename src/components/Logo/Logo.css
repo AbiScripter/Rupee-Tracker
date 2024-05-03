@@ -1,10 +1,11 @@
 .custom-text {
   font-size: calc(1em + 1vmin);
   font-weight: 900;
-  color: tomato;
+  color: black;
+  margin-left: 0.6rem;
 
-  --x-offset: -0.0625em;
-  --y-offset: 0.0625em;
+  --x-offset: -0.035em;
+  --y-offset: 0.0325em;
   --stroke: 0.025em;
   --background-color: white;
   --stroke-color: lightblue;

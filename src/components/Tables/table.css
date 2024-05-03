@@ -61,10 +61,14 @@
   }
 }
 
-@media (width < 350px) {
+@media (width < 390px) {
   .table-filter-container {
     flex-direction: column;
+
     text-align: center;
+    span {
+      margin-right: 0.3rem;
+    }
   }
 }
 

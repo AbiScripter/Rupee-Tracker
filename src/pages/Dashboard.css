@@ -152,15 +152,14 @@
     flex-direction: column;
 
     .card {
-      height: 9rem;
       display: flex;
       align-items: center;
       justify-content: space-around;
       padding: 0 0.3rem;
-      width: 20rem;
       height: 4rem;
       margin: 0 auto;
       gap: 0.2rem;
+      width: 95%;
     }
 
     h3 {
@@ -180,7 +179,6 @@
 
   .line-graph-container {
     min-height: 12rem !important;
-    /* border: 2px solid red; */
   }
 
   .pie-chart-container {
@@ -191,7 +189,6 @@
 @media (width < 390px) {
   .balance-container {
     .card {
-      width: 15rem;
       gap: 0.2rem;
     }
 
