@@ -8,7 +8,6 @@ import FormImg from "../FormImg";
 import GoogleLoginForm from "./GoogleLoginForm";
 
 const SignUpForm = ({ setIsSignInTab }) => {
-  // const { setUserId } = useContext(UserContext);
   const account = useSelector((state) => state.account);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
@@ -115,7 +114,6 @@ const SignUpForm = ({ setIsSignInTab }) => {
             </span>
           </p>
           <h1 className="form-tag-text">Take charge of your money today!</h1>
-          {/* //! TODO: implement signup */}
           <GoogleLoginForm />
         </Form>
       </Card>

@@ -34,59 +34,6 @@ export const options = {
   },
 };
 
-// export function LineGraph() {
-//   const [chartData, setChartData] = useState(null);
-//   const graphData = useSelector((state) => state.account.graphData);
-
-//   useEffect(() => {
-//     if (graphData.length > 0) {
-//       const sortedGraphData = [...graphData].sort(
-//         (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-//       );
-//       const temp = [];
-//       const labels = [];
-
-//       function formateDateAndPush(date) {
-//         const formattedDate = date.slice(4, 15);
-//         labels.push(formattedDate);
-//       }
-
-//       const getCumulativeAmounts = () => {
-//         let prevAmount = 0;
-//         for (const transaction of sortedGraphData) {
-//           prevAmount += transaction.amount;
-//           temp.push(prevAmount);
-//           formateDateAndPush(transaction.createdAt);
-//         }
-//         return temp;
-//       };
-
-//       const cumulativeAmount = getCumulativeAmounts();
-
-//       const data = {
-//         labels,
-//         datasets: [
-//           {
-//             label: "Current Balance",
-//             data: cumulativeAmount,
-//             borderColor: "rgb(255, 99, 132)",
-//             backgroundColor: "rgba(255, 99, 132, 0.5)",
-//           },
-//         ],
-//       };
-
-//       setChartData(data);
-//     }
-//   }, [graphData]);
-//   console.log(graphData);
-
-//   if (!chartData) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return <Line options={options} data={chartData} />;
-// }
-
 export function LineGraph() {
   const [chartData, setChartData] = useState(null);
   const graphData = useSelector((state) => state.account.graphData);
@@ -144,3 +91,57 @@ export function LineGraph() {
 }
 
 export default LineGraph;
+
+//another way to linegraph
+// export function LineGraph() {
+//   const [chartData, setChartData] = useState(null);
+//   const graphData = useSelector((state) => state.account.graphData);
+
+//   useEffect(() => {
+//     if (graphData.length > 0) {
+//       const sortedGraphData = [...graphData].sort(
+//         (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+//       );
+//       const temp = [];
+//       const labels = [];
+
+//       function formateDateAndPush(date) {
+//         const formattedDate = date.slice(4, 15);
+//         labels.push(formattedDate);
+//       }
+
+//       const getCumulativeAmounts = () => {
+//         let prevAmount = 0;
+//         for (const transaction of sortedGraphData) {
+//           prevAmount += transaction.amount;
+//           temp.push(prevAmount);
+//           formateDateAndPush(transaction.createdAt);
+//         }
+//         return temp;
+//       };
+
+//       const cumulativeAmount = getCumulativeAmounts();
+
+//       const data = {
+//         labels,
+//         datasets: [
+//           {
+//             label: "Current Balance",
+//             data: cumulativeAmount,
+//             borderColor: "rgb(255, 99, 132)",
+//             backgroundColor: "rgba(255, 99, 132, 0.5)",
+//           },
+//         ],
+//       };
+
+//       setChartData(data);
+//     }
+//   }, [graphData]);
+//   console.log(graphData);
+
+//   if (!chartData) {
+//     return <div>Loading...</div>;
+//   }
+
+//   return <Line options={options} data={chartData} />;
+// }

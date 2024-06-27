@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tag, Select, Input } from "antd";
+import { Button, Table, Select, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./table.css";
@@ -49,6 +49,18 @@ const DataTable = () => {
   }, [currAccount]);
 
   //! Sort
+
+  const onSort = (value) => {
+    setSort(value);
+    if (value === "amount") {
+      hanldeSortAmount();
+    } else if (value === "date") {
+      handleSortDate();
+    } else {
+      clearSortAndFilter();
+    }
+  };
+
   const hanldeSortAmount = () => {
     const updatedArr = [...movementsArr].sort((a, b) => b.amount - a.amount);
     setMovementsArr(updatedArr);
@@ -61,12 +73,6 @@ const DataTable = () => {
     );
 
     setMovementsArr(updatedArr);
-  };
-
-  const clearSortAndFilter = () => {
-    setFilterValue("all");
-    setCategory("");
-    setMovementsArr(originalArr);
   };
 
   //!Filter
@@ -99,15 +105,10 @@ const DataTable = () => {
     setMovementsArr(filteredArr);
   };
 
-  const onSort = (value) => {
-    setSort(value);
-    if (value === "amount") {
-      hanldeSortAmount();
-    } else if (value === "date") {
-      handleSortDate();
-    } else {
-      clearSortAndFilter();
-    }
+  const clearSortAndFilter = () => {
+    setFilterValue("all");
+    setCategory("");
+    setMovementsArr(originalArr);
   };
 
   return (

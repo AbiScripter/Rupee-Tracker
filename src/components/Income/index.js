@@ -28,7 +28,7 @@ const Income = () => {
         incomeData: incomeData,
         userId: currUser.uid,
         transId: currUser.transactionId,
-      }) //passing data to redux thunk
+      })
     );
 
     dispatch(

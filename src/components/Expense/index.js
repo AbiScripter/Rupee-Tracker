@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { addExpenseAsync, addGraphDataAsync } from "../../slices/accountSlice";
 import { genRandomKey } from "../../App";
 import { Modal, Button, Form } from "antd";
 import ExpenseForm from "./ExpenseForm";
 import { addExpense, addGraph } from "../../slices/accountSlice";
 
 const Expense = () => {
-  // const { userId, transactionId } = useContext(UserContext);
   const currUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const currAccount = useSelector((state) => state.account);
@@ -30,7 +28,7 @@ const Expense = () => {
         expenseData: expenseData,
         userId: currUser.uid,
         transId: currUser.transactionId,
-      }) //passing data to redux thunk
+      })
     );
 
     dispatch(

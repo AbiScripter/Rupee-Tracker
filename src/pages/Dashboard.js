@@ -62,11 +62,12 @@ const Dashboard = () => {
         // dispatch actions with the first item
         const firstUserData = userData[0];
         // console.log(firstUserData);
-        dispatch(initiateUserData(firstUserData));
-
-        dispatch(
-          initiateUser({ ...currUser, transactionId: firstUserData.id })
-        );
+        if (firstUserData) {
+          dispatch(initiateUserData(firstUserData));
+          dispatch(
+            initiateUser({ ...currUser, transactionId: firstUserData.id })
+          );
+        }
       },
       (error) => {
         console.error("Error fetching transactions:", error);
