@@ -1,9 +1,22 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
 
-async function signin(auth, email, password) {
+async function signInUser(data, setIsLoading) {
+  setIsLoading(true);
+  try {
+    const user = await signin(data.email, data.password);
+    toast.success("Signed In Sucessfully");
+    return user;
+  } catch (error) {
+    toast.error(error.message);
+    return null;
+  } finally {
+    setIsLoading(false);
+  }
+}
+
+async function signin(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -20,20 +33,6 @@ async function signin(auth, email, password) {
   }
 }
 
-async function signInUser(data, setIsLoading) {
-  setIsLoading(true);
-  try {
-    const user = await signin(auth, data.email, data.password);
-    // console.log(user);
-    toast.success("Singed In Sucessfully");
-    setIsLoading(false);
-    return user;
-  } catch (error) {
-    toast.error(error.message);
-    setIsLoading(false);
-    return null;
-  }
-}
 export default signInUser;
 
 // signInWithEmailAndPassword(auth, email, password)

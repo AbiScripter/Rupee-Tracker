@@ -3,10 +3,12 @@ import { db, doc, setDoc } from "../firebase";
 import { toast } from "react-toastify";
 
 async function createDoc(user, username, userAccountData) {
+  console.log(user);
+  console.log(userAccountData);
   //getting userdata
   const userRef = doc(db, "users", user.uid);
+  //if user signing up there wont be any userData
   const userData = await getDoc(userRef);
-
   //only create doc if userdata don't already exists in database
   //else dont create doc
   //!signUP
