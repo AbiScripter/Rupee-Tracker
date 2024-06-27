@@ -28,6 +28,7 @@ const accountSlice = createSlice({
       state.currBalance = state.totalIncome - state.totalExpense;
       updateTransactions(state, action.payload.userId, action.payload.transId);
     },
+
     addExpense(state, action) {
       // state.expenses = [...state.expenses, action.payload];
       state.expenses.push(action.payload.expenseData);
@@ -35,6 +36,7 @@ const accountSlice = createSlice({
       state.currBalance = state.totalIncome - state.totalExpense;
       updateTransactions(state, action.payload.userId, action.payload.transId);
     },
+
     addGraph(state, action) {
       state.graphData.push({
         amount: action.payload.amount,
@@ -44,18 +46,15 @@ const accountSlice = createSlice({
       // console.log(action.payload);
     },
 
-    initiateStateLogin: (state, action) => {
-      if (action.payload !== undefined) {
-        console.log("from redux state", action.payload);
-        return action.payload;
-      }
-      return state;
+    initiateUserData: (state, action) => {
+      // console.log("from redux state", action.payload);
+      return action.payload;
     },
     reset: () => initialState,
   },
 });
 
-export const { addIncome, addExpense, initiateStateLogin, addGraph, reset } =
+export const { addIncome, addExpense, initiateUserData, addGraph, reset } =
   accountSlice.actions;
 
 export default accountSlice.reducer;

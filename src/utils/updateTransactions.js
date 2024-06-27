@@ -3,6 +3,9 @@ import { db } from "../firebase";
 
 const updateTransactions = async (updatedState, userId, transId) => {
   try {
+    console.log(updatedState);
+    console.log(userId);
+
     const docRef = doc(db, `users/${userId}/transactions`, transId);
     const transactionData = {
       currBalance: updatedState.currBalance,

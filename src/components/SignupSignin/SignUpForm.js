@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Button, Form, Input, Card } from "antd";
 import signUpUser from "../../utils/signUpUtils";
 import createDoc from "../../utils/createDocUtils";
-import { useSelector } from "react-redux";
 import FormImg from "../FormImg";
 import GoogleLoginForm from "./GoogleLoginForm";
 
