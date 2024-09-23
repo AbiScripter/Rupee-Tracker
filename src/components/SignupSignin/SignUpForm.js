@@ -8,7 +8,7 @@ import FormImg from "../FormImg";
 import GoogleLoginForm from "./GoogleLoginForm";
 
 const SignUpForm = ({ setIsSignInTab }) => {
-  const account = useSelector((state) => state.account);
+  const userData = useSelector((state) => state.user.user);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,13 +16,13 @@ const SignUpForm = ({ setIsSignInTab }) => {
   // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   async function handleFormSubmit(data) {
-    const user = await signUpUser(data, setIsLoading);
-    console.log(user);
+    const signupData = await signUpUser(data, setIsLoading);
+    console.log(signupData);
 
     //if signin succes it return userdata
     //if signin fails it returns null
-    if (user !== null) {
-      createDoc(user, data.username, account);
+    if (signupData !== null) {
+      createDoc(signupData, data.username, userData);
       navigate("/dashboard");
     }
 

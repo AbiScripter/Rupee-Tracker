@@ -18,7 +18,7 @@ export const options = {
   },
 };
 function PieChart() {
-  const expenses = useSelector((state) => state.account.expenses);
+  const expenses = useSelector((state) => state.user.user.expenses);
 
   let housing = 0;
   let groceries = 0;

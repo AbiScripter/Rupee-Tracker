@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "antd";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { collection, onSnapshot } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 
-import { initiateUser } from "../slices/userSlice";
-import { initiateUserData, reset } from "../slices/accountSlice";
+import { reset } from "../slices/userSlice";
 
 import Header from "../components/Header";
 import Expense from "../components/Expense";
@@ -20,8 +18,7 @@ import NoTransactions from "../components/NoTransactions";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const currAccount = useSelector((state) => state.account);
-  const currUser = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,44 +37,44 @@ const Dashboard = () => {
 
   //!fetching user transaction data
   //!  method using onsnapshot(real time data fetching)
-  useEffect(() => {
-    const userId = currUser?.uid;
+  // useEffect(() => {
+  //   const userId = user?.uid;
 
-    if (!userId) {
-      console.warn("No user ID available to fetch data.");
-      return;
-    }
+  //   if (!userId) {
+  //     console.warn("No user ID available to fetch data.");
+  //     return;
+  //   }
 
-    //user's data collection
-    const userCollectionRef = collection(db, `users/${userId}/transactions`);
+  //   //user's data collection
+  //   const userCollectionRef = collection(db, `users/${userId}/transactions`);
 
-    const unsubscribe = onSnapshot(
-      userCollectionRef,
-      (querySnapshot) => {
-        const userData = [];
-        querySnapshot.forEach((doc) => {
-          userData.push({ id: doc.id, ...doc.data() });
-        });
-        //we are getting data from collection so that will be an array, so getting the first index will be the user data
-        // dispatch actions with the first item
-        const firstUserData = userData[0];
-        // console.log(firstUserData);
-        if (firstUserData) {
-          dispatch(initiateUserData(firstUserData));
-          dispatch(
-            initiateUser({ ...currUser, transactionId: firstUserData.id })
-          );
-        }
-      },
-      (error) => {
-        console.error("Error fetching transactions:", error);
-      }
-    );
+  //   const unsubscribe = onSnapshot(
+  //     userCollectionRef,
+  //     (querySnapshot) => {
+  //       const userData = [];
+  //       querySnapshot.forEach((doc) => {
+  //         userData.push({ id: doc.id, ...doc.data() });
+  //       });
+  //       //we are getting data from collection so that will be an array, so getting the first index will be the user data
+  //       // dispatch actions with the first item
+  //       const firstUserData = userData[0];
+  //       // console.log(firstUserData);
+  //       if (firstUserData) {
+  //         dispatch(initiateUserData(firstUserData));
+  //         dispatch(
+  //           initiateUser({ ...user, transactionId: firstUserData.id })
+  //         );
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error("Error fetching transactions:", error);
+  //     }
+  //   );
 
-    return () => {
-      unsubscribe();
-    };
-  }, [currUser?.uid, dispatch]);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [user?.uid, dispatch]);
 
   return (
     <div className="app-container">
@@ -85,24 +82,22 @@ const Dashboard = () => {
       <Button className="sign-out-btn" onClick={handleSignOut}>
         SignOut
       </Button>
-      {currUser && (
-        <h2 className="hello-user">{`Hello ${currUser?.name} 👋`}</h2>
-      )}
+      {user && <h2 className="hello-user">{`Hello ${user?.name} 👋`}</h2>}
 
       <div className="content-container">
-        <BalanceContainer currAccount={currAccount} />
-        <DataVisualization currAccount={currAccount} />
+        <BalanceContainer user={user} />
+        <DataVisualization user={user} />
       </div>
     </div>
   );
 };
 
-const BalanceContainer = ({ currAccount }) => {
+const BalanceContainer = ({ user }) => {
   return (
     <div className="balance-container">
       <div className="card card-balance">
         <h3>Balance</h3>
-        <h1>₹{currAccount.currBalance}</h1>
+        <h1>₹{user.currBalance}</h1>
       </div>
       <div className="card">
         <Income />
@@ -114,10 +109,10 @@ const BalanceContainer = ({ currAccount }) => {
   );
 };
 
-const DataVisualization = ({ currAccount }) => {
+const DataVisualization = ({ user }) => {
   return (
     <div>
-      {currAccount.expenses.length === 0 && currAccount.incomes.length === 0 ? (
+      {user.expenses.length === 0 && user.incomes.length === 0 ? (
         <NoTransactions />
       ) : (
         <div className="main-section">

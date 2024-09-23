@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addGraph, addIncome } from "../../slices/accountSlice";
+import { addGraph, addIncome } from "../../slices/userSlice";
 import { genRandomKey } from "../../App";
 import { Modal, Button } from "antd";
 import IncomeForm from "./IncomeForm";
 import { Form } from "antd";
 
 const Income = () => {
-  const currUser = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
   const [form] = Form.useForm();
 
@@ -23,20 +22,12 @@ const Income = () => {
       key: genRandomKey(),
     };
 
-    dispatch(
-      addIncome({
-        incomeData: incomeData,
-        userId: currUser.uid,
-        transId: currUser.transactionId,
-      })
-    );
+    dispatch(addIncome(incomeData));
 
     dispatch(
       addGraph({
         amount: data.amount,
         createdAt: String(data.created.$d),
-        userId: currUser.uid,
-        transId: currUser.transactionId,
       })
     );
 
@@ -55,7 +46,7 @@ const Income = () => {
   return (
     <>
       <h3>Income</h3>
-      <h1>₹{currAccount.totalIncome}</h1>
+      <h1>₹{user.totalIncome}</h1>
       <Button onClick={showModal}>Add Income</Button>
       <Modal
         open={openModal}

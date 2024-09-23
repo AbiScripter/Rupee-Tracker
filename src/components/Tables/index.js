@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./table.css";
 const { Search } = Input;
+
 const columns = [
   {
     title: "Source",
@@ -32,8 +33,8 @@ const columns = [
 ];
 
 const DataTable = () => {
-  const currAccount = useSelector((state) => state.account);
-  const originalArr = [...currAccount.incomes, ...currAccount.expenses];
+  const user = useSelector((state) => state.user.user);
+  const originalArr = [...user.incomes, ...user.expenses];
   const [movementsArr, setMovementsArr] = useState([]);
   const [filterValue, setFilterValue] = useState("all");
   const [category, setCategory] = useState("");
@@ -46,7 +47,7 @@ const DataTable = () => {
 
   useEffect(() => {
     setMovementsArr(originalArr);
-  }, [currAccount]);
+  }, [user]);
 
   //! Sort
 

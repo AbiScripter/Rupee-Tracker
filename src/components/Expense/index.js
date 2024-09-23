@@ -3,12 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { genRandomKey } from "../../App";
 import { Modal, Button, Form } from "antd";
 import ExpenseForm from "./ExpenseForm";
-import { addExpense, addGraph } from "../../slices/accountSlice";
+import { addExpense, addGraph } from "../../slices/userSlice";
 
 const Expense = () => {
-  const currUser = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const currAccount = useSelector((state) => state.account);
   const [openModal, setOpenModal] = useState(false);
   const [form] = Form.useForm();
 
@@ -23,20 +22,12 @@ const Expense = () => {
       key: genRandomKey(),
     };
 
-    dispatch(
-      addExpense({
-        expenseData: expenseData,
-        userId: currUser.uid,
-        transId: currUser.transactionId,
-      })
-    );
+    dispatch(addExpense(expenseData));
 
     dispatch(
       addGraph({
         amount: -data.amount,
         createdAt: String(data.created.$d),
-        userId: currUser.uid,
-        transId: currUser.transactionId,
       })
     );
 
@@ -55,7 +46,7 @@ const Expense = () => {
   return (
     <>
       <h3>Expenses</h3>
-      <h1>₹{currAccount.totalExpense}</h1>
+      <h1>₹{user.totalExpense}</h1>
       <Button onClick={showModal}>Add Expense</Button>
       <Modal
         open={openModal}

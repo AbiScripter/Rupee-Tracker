@@ -2,11 +2,11 @@ import { getDoc, collection, addDoc } from "firebase/firestore";
 import { db, doc, setDoc } from "../firebase";
 import { toast } from "react-toastify";
 
-async function createDoc(user, username, userAccountData) {
-  console.log(user);
+async function createDoc(signupData, username, userAccountData) {
+  console.log(signupData);
   console.log(userAccountData);
   //getting userdata
-  const userRef = doc(db, "users", user.uid);
+  const userRef = doc(db, "users", signupData.uid);
   //if user signing up there wont be any userData
   const userData = await getDoc(userRef);
   //only create doc if userdata don't already exists in database
@@ -15,21 +15,18 @@ async function createDoc(user, username, userAccountData) {
   if (!userData.exists()) {
     console.log("first time  signing up........");
     try {
-      const currTimeStamp = user.metadata.createdAt;
-      const createdAt = new Date(Number(currTimeStamp));
-
-      await setDoc(doc(db, "users", user.uid), {
-        name: user.displayName ? user.displayName : username,
-        email: user.email,
-        photoURl: user.photoURL ? user.photoURL : "",
-        createdAt: createdAt,
-      });
-
-      const subcollectionRef = collection(userRef, "transactions");
-      // console.log(userRef);
-      await addDoc(subcollectionRef, {
+      await setDoc(doc(db, "users", signupData.uid), {
         ...userAccountData,
+        name: signupData.displayName ? signupData.displayName : username,
+        email: signupData.email,
+        uid: signupData.uid,
       });
+
+      // const subcollectionRef = collection(userRef, "transactions");
+      // // console.log(userRef);
+      // await addDoc(subcollectionRef, {
+      //   ...userAccountData,
+      // });
 
       toast.success("Account sucessfully created");
     } catch (error) {

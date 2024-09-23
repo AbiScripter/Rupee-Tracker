@@ -36,7 +36,7 @@ export const options = {
 
 export function LineGraph() {
   const [chartData, setChartData] = useState(null);
-  const graphData = useSelector((state) => state.account.graphData);
+  const graphData = useSelector((state) => state.user.user.graphData);
 
   const formateDateAndPush = (date, labels) => {
     const formattedDate = `${date.slice(4, 10)} ${date.slice(13, 15)}`;
